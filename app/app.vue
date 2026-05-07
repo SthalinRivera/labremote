@@ -20,12 +20,12 @@ useHead({
     },
   ],
   htmlAttrs: {
-    lang: 'en'
+    lang: 'es'
   }
 })
 
-const title = 'Nuxt Dashboard Template'
-const description = 'A professional dashboard template built with Nuxt UI, featuring multiple pages, data visualization, and comprehensive management capabilities for creating powerful admin interfaces.'
+const title = 'Lab-remote'
+const description = 'Automatización de sistemas IoT, robótica y electrónica'
 
 useSeoMeta({
   title,
@@ -43,6 +43,8 @@ const { data: files } = useLazyAsyncData('search', () => queryCollectionSearchSe
 })
 
 provide('navigation', navigation)
+
+
 </script>
 
 <template>
@@ -57,3 +59,22 @@ provide('navigation', navigation)
     </ClientOnly>
   </UApp>
 </template>
+<style>
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.4s;
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  filter: blur(1rem);
+} 
+.layout-enter-active,
+.layout-leave-active {
+  transition: all 0.4s;
+}
+.layout-enter-from,
+.layout-leave-to {
+  filter: grayscale(1);
+}
+</style>

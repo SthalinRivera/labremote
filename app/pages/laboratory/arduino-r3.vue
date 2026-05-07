@@ -8,7 +8,32 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+     <UDashboardPanel id="dashboard">
+           <template #header>
+         <UDashboardNavbar title="Dashboard" :ui="{ right: 'gap-3' }">
+        <template #leading>
+          <UDashboardSidebarCollapse />
+        </template>
+        <template #right>
+          <UTooltip text="Notifications" :shortcuts="['N']">
+             <UColorModeButton />
+            <UButton color="neutral" variant="ghost" square @click="isNotificationsSlideoverOpen = true">
+              <UChip color="error" inset>
+                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
+              </UChip>
+            </UButton>
+          </UTooltip>
+
+          <UDropdownMenu :items="items">
+            <UButton icon="i-lucide-plus" size="md" class="rounded-full" />
+          </UDropdownMenu>
+        </template>
+      </UDashboardNavbar>
+  
+</template>
+
+    <template #body>
+  <div class="min-h-screen p-6">
 
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
 
@@ -85,4 +110,6 @@ definePageMeta({
     </div>
 
   </div>
+    </template>
+</UDashboardPanel>
 </template>

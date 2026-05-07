@@ -1,8 +1,8 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'student',
-  roles: ['student', 'docente'],
-  middleware: ['lab-session']
+ middleware: ['auth', 'role', 'lab-session'],
+    roles: ['student', 'admin']
 })
 
 const toast = useToast()
@@ -82,7 +82,34 @@ const timeLeftFormatted = computed(() => {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-6 max-w-7xl">
+
+      <UDashboardPanel id="dashboard">
+           <template #header>
+         <UDashboardNavbar title="Dashboard" :ui="{ right: 'gap-3' }">
+        <template #leading>
+          <UDashboardSidebarCollapse />
+        </template>
+        <template #right>
+          <UTooltip text="Notifications" :shortcuts="['N']">
+             <UColorModeButton />
+            <UButton color="neutral" variant="ghost" square @click="isNotificationsSlideoverOpen = true">
+              <UChip color="error" inset>
+                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
+              </UChip>
+            </UButton>
+          </UTooltip>
+
+          <UDropdownMenu :items="items">
+            <UButton icon="i-lucide-plus" size="md" class="rounded-full" />
+          </UDropdownMenu>
+        </template>
+      </UDashboardNavbar>
+  
+</template>
+
+    <template #body>
+    
+  <div class="container mx-auto px-4 py-6 ">
     <!-- Encabezado con info de sesión -->
     <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
       <div>
@@ -189,6 +216,9 @@ const timeLeftFormatted = computed(() => {
       </UCard>
     </div>
   </div>
+  
+    </template>
+   </UDashboardPanel>
 </template>
 
 <style scoped>

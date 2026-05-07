@@ -14,10 +14,8 @@ const UCheckbox = resolveComponent('UCheckbox')
 
 definePageMeta({
   layout: "dashboard",
-  middleware: ['auth', 'role'],
-  roles: ['admin']
+  roles: ["admin"]
 })
-
 
 const toast = useToast()
 const table = useTemplateRef('table')
@@ -152,35 +150,9 @@ const columns: TableColumn<User>[] = [
     accessorKey: 'role',
     header: 'Rol',
     cell: ({ row }) => h(UBadge, {
-      color: row.original.role === 'admin' ? 'success' : row.original.role === 'pending' ? 'warning' : 'neutral'
-    }, () => row.original.role === 'admin' ? 'Administrador' : row.original.role === 'pending' ? 'Pendiente' : 'Estudiante')
+      color: row.original.role === 'admin' ? 'success' : 'neutral'
+    }, () => row.original.role === 'admin' ? 'Administrador' : 'Estudiante')
   },
-  // 🔥 NUEVA COLUMNA: Autorización (mostrar botón aprobar si está pendiente)
- {
-  id: 'authorization',
-  header: 'Estado',
-  cell: ({ row }) => {
-    const user = row.original
-    const isPending = user.status === 'pending'
-    
-    if (isPending) {
-      return h('div', { class: 'flex items-center gap-2' }, [
-        h(UBadge, { color: 'warning', variant: 'subtle' }, () => 'Pendiente'),
-        h(UButton, {
-          size: 'xs',
-          color: 'success',
-          icon: 'i-lucide-check',
-          onClick: () => approveUser(user)
-        }, () => 'Autorizar')
-      ])
-    }
-    
-    return h(UBadge, {
-      color: 'success',
-      variant: 'subtle'
-    }, () => 'Autorizado')
-  }
-},
   {
     id: 'actions',
     header: '',
@@ -205,35 +177,7 @@ watch(roleFilter, (newVal) => {
   if (!roleColumn) return
   roleColumn.setFilterValue(newVal === 'all' ? undefined : newVal)
 })
-async function approveUser(user: User) {
-  try {
-    await api(`/users/${user.id}/approve`, { method: 'PUT' })
-    toast.add({
-      title: 'Usuario autorizado',
-      description: `${user.email} ahora puede acceder al sistema.`,
-      color: 'success'
-    })
-    await refresh()
-  } catch (error: any) {
-    toast.add({
-      title: 'Error',
-      description: error.message,
-      color: 'error'
-    })
-  }
-}
-const statusFilter = ref('all')
 
-async function filterByStatus() {
-  if (statusFilter.value === 'all') {
-    await refresh()
-  } else {
-    const { data: filtered } = await useAsyncData('users-filtered', () =>
-      api<User[]>(`/users?status=${statusFilter.value}`)
-    )
-    if (filtered.value) users.value = filtered.value
-  }
-}
 // --- Paginación ---
 const pagination = ref({ pageIndex: 0, pageSize: 10 })
 </script>
@@ -271,11 +215,7 @@ const pagination = ref({ pageIndex: 0, pageSize: 10 })
             { label: 'Administradores', value: 'admin' },
             { label: 'Estudiantes', value: 'student' }
           ]" placeholder="Filtrar por rol" class="min-w-36" />
-<USelect v-model="statusFilter" :items="[
-  { label: 'Todos', value: 'all' },
-  { label: 'Autorizados', value: 'active' },
-  { label: 'Pendientes', value: 'pending' }
-]" placeholder="Filtrar por estado" class="min-w-36" @update:model-value="filterByStatus" />
+
           <UDropdownMenu :items="table?.tableApi?.getAllColumns()
             .filter(col => col.getCanHide() && col.id !== 'select')
             .map(col => ({

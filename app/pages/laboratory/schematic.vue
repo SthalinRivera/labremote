@@ -17,35 +17,35 @@ const lab = useLabStore()
 
 const hotspots: Hotspot[] = [
     {
-        path: '/ios-jetson-nano',
+        path: '/laboratory/ios-jetson-nano',
         label: 'Jetson Nano',
         position: 'top-[44%] left-[7%] w-[19%] h-[44%]',
         color: 'hover:bg-blue-500/20 border-blue-500',
         description: 'Placa principal para IA en el borde'
     },
-    {
-        path: '/raspberry-pi',
+    {   
+        path: '/laboratory/raspberry-pi',
         label: 'Raspberry Pi',
         position: 'top-[18%] left-[50%] w-[18%] h-[20%]',
         color: 'hover:bg-green-500/20 border-green-500',
         description: 'Servidor web y control periférico'
     },
     {
-        path: '/esp32',
+        path: '/laboratory/esp32',
         label: 'ESP32',
         position: 'top-[30%] left-[72%] w-[20%] h-[17%]',
         color: 'hover:bg-yellow-500/20 border-yellow-500',
         description: 'Sensores y actuadores IoT'
     },
     {
-        path: '/arduino-r3',
+        path: '/laboratory/arduino-r3',
         label: 'Arduino R3',
         position: 'top-[58%] left-[76%] w-[18%] h-[24%]',
         color: 'hover:bg-red-500/20 border-red-500',
         description: 'Adquisición de datos'
     },
     {
-        path: '/camera',
+        path: '/laboratory/camera',
         label: 'Cámara',
         position: 'top-[30%] left-[38%] w-[10%] h-[20%]',
         color: 'hover:bg-purple-500/20 border-purple-500',
@@ -84,6 +84,29 @@ onMounted(() => {
 </script>
 
 <template>
+       <UDashboardPanel id="dashboard">
+        <template #header>
+         <UDashboardNavbar title="Dashboard" :ui="{ right: 'gap-3' }">
+        <template #leading>
+          <UDashboardSidebarCollapse />
+        </template>
+
+        <template #right>
+          <UTooltip text="Notifications" :shortcuts="['N']">
+            <UButton color="neutral" variant="ghost" square @click="isNotificationsSlideoverOpen = true">
+              <UChip color="error" inset>
+                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
+              </UChip>
+            </UButton>
+          </UTooltip>
+
+          <UDropdownMenu :items="items">
+            <UButton icon="i-lucide-plus" size="md" class="rounded-full" />
+          </UDropdownMenu>
+        </template>
+      </UDashboardNavbar>
+      </template>
+      <template #body>
     <div class="container mx-auto px-4 py-6 max-w-7xl">
         <!-- Título y estado de sesión -->
         <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
@@ -190,6 +213,8 @@ onMounted(() => {
             </div>
         </div>
     </div>
+</template>
+     </UDashboardPanel>
 </template>
 
 <style scoped>

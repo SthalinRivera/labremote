@@ -10,26 +10,22 @@ const goToFeatures = () => {
 </script>
 
 <template>
-    <div class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors">
+    <div class="text-gray-900 dark:text-gray-100 transition-colors">
 
         <!-- Hero Section -->
         <section class="min-h-[90vh] flex items-center justify-center overflow-hidden relative">
             <!-- Animated background (opcional) -->
-            <div
-                class="absolute inset-0 bg-gradient-to-br from-blue-50 via-transparent to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 pointer-events-none" />
+           
 
             <div class="max-w-7xl mx-auto px-6 py-16 lg:py-24 z-10">
                 <div class="grid lg:grid-cols-2 gap-12 items-center">
                     <!-- Texto -->
                     <div class="space-y-6 text-center lg:text-left">
                         <UBadge color="primary" variant="subtle" class="mx-auto lg:mx-0">
-                            Tesis de Posgrado
+                            IoT + IA
                         </UBadge>
                         <h1 class="text-4xl md:text-6xl font-bold tracking-tight">
                             Laboratorio Remoto
-                            <span class="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                                IoT + IA
-                            </span>
                         </h1>
                         <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto lg:mx-0">
                             Accede a hardware real desde cualquier lugar. Controla dispositivos electrónicos,
@@ -210,9 +206,8 @@ const goToFeatures = () => {
                         Únete a cientos de estudiantes que ya utilizan nuestra plataforma para sus prácticas e
                         investigaciones.
                     </p>
-                    <UButton size="xl" variant="solid" color="white"
-                        :label="isLogged ? 'Ir al laboratorio' : 'Crear cuenta gratis'" icon="i-lucide-arrow-right"
-                        trailing @click="goToStart" class="text-blue-600 hover:bg-gray-100" />
+                    <UButton size="xl" color="neutral" variant="solid" :label="isLogged ? 'Ir al laboratorio' : 'Crear cuenta gratis'" icon="i-lucide-arrow-right"
+                        trailing @click="goToStart"  />
                 </UCard>
             </div>
         </section>

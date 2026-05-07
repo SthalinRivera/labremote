@@ -3,6 +3,6 @@ export interface User {
     email: string
     name: string
     avatar_url: string | null
-    role: 'admin' | 'student'
+    role: 'admin' | 'student' | 'pending'
     created_at: string
 }

@@ -6,22 +6,16 @@ defineProps<{
 }>()
 
 const teams = ref([{
-  label: 'Nuxt',
+  label: 'Lab Remote Iot',
   avatar: {
-    src: 'https://github.com/nuxt.png',
-    alt: 'Nuxt'
+    src: '/',
+    alt: 'Lab Remote Iot'
   }
 }, {
-  label: 'NuxtHub',
+  label: 'Dodumentacion Lab IOT-AI',
   avatar: {
-    src: 'https://github.com/nuxt-hub.png',
-    alt: 'NuxtHub'
-  }
-}, {
-  label: 'NuxtLabs',
-  avatar: {
-    src: 'https://github.com/nuxtlabs.png',
-    alt: 'NuxtLabs'
+    src: 'https://iot-ia.vercel.app/',
+    alt: 'Dodumentacion Lab IOT-AI'
   }
 }])
 const selectedTeam = ref(teams.value[0])

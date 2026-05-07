@@ -36,6 +36,14 @@ const links = [[{
   onSelect: () => {
     open.value = false
   }
+},
+{
+  label: 'Metricas',
+  icon: 'i-lucide-bar-chart-4',
+  to: '/dashboard/metrics',
+  onSelect: () => {
+    open.value = false
+  }
 }, {
   label: 'Settings',
   to: '/dashboard/settings',
