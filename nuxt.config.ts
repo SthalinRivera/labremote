@@ -31,7 +31,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       googleClientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID,
-      apiUrl: process.env.NUXT_PUBLIC_API_URL
+      apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:4000'
     }
   },
   compatibilityDate: '2024-07-11',

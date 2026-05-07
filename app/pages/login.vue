@@ -37,7 +37,7 @@ const loginWithGoogle = async (response: any) => {
 
     try {
         const res = await $fetch<AuthResponse>(
-            `${config.public.apiBase || "http://localhost:4000"}/auth/google`,
+            `${config.public.apiUrl}/auth/google`,
             {
                 method: "POST",
                 body: { credential: response.credential },
