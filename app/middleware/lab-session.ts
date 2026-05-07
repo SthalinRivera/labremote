@@ -3,20 +3,21 @@ export default defineNuxtRouteMiddleware(async (to) => {
     const { isLogged } = useAuth()
     const lab = useLabStore()
 
-    // 1. Autenticación
     if (!isLogged) {
         return navigateTo('/login')
     }
 
-    // 2. Si el store aún no ha cargado sus datos (null inicial), forzar carga
-    if (lab.session === null && lab.queue === null) {
+    // Solo Cámara y Jetson Nano requieren sesión activa
+    const requiresLabSession = [
+        '/laboratory/camerasss',
+        '/laboratory/ios-jetson-nano'
+    ].includes(to.path)
+
+    if (requiresLabSession && lab.session === null) {
         await lab.load()
     }
 
-    // 3. Rutas que requieren sesión activa de laboratorio
-    const requiresLabSession = ['/camera', '/ios-jetson-nano', '/schematic', '/queue'].includes(to.path)
-
     if (requiresLabSession && !lab.hasAccess) {
-        return navigateTo('/student')
+        return navigateTo('/student/queue')
     }
 })

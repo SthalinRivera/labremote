@@ -8,7 +8,7 @@ defineProps<{
 const teams = ref([{
   label: 'Lab Remote Iot',
   avatar: {
-    src: '/',
+    src: '/logo.png',
     alt: 'Lab Remote Iot'
   }
 }, {
@@ -26,13 +26,7 @@ const items = computed<DropdownMenuItem[][]>(() => {
     onSelect() {
       selectedTeam.value = team
     }
-  })), [{
-    label: 'Create team',
-    icon: 'i-lucide-circle-plus'
-  }, {
-    label: 'Manage teams',
-    icon: 'i-lucide-cog'
-  }]]
+  })), []]
 })
 </script>
 

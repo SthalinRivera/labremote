@@ -19,7 +19,7 @@ onMounted(() => {
 // 🔹 Métricas del usuario (/me)
 const { data: metricsResponse, status, error, refresh } = useAsyncData(
   'my-metrics',
-  () => api('/metrics/me'),
+  () => api('/api/metrics/me'),
   { 
     default: () => null,
     watch: [user]
@@ -84,9 +84,7 @@ function formatDate(dateString: string) {
             </UButton>
           </UTooltip>
 
-          <UDropdownMenu :items="items">
-            <UButton icon="i-lucide-plus" size="md" class="rounded-full" />
-          </UDropdownMenu>
+        
         </template>
       </UDashboardNavbar>
   <div class="min-h-screen flex items-start justify-center py-8 px-4">

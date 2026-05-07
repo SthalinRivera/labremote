@@ -68,13 +68,13 @@ const timeLeftFormatted = computed(() => {
             </UButton>
           </UTooltip>
 
-          <UDropdownMenu :items="items">
-            <UButton icon="i-lucide-plus" size="md" class="rounded-full" />
-          </UDropdownMenu>
+        
         </template>
       </UDashboardNavbar>
       </template>
       <template #body>
+
+         <LabSessionGuard>
     <div class="container mx-auto px-4 py-6 max-w-7xl">
         <!-- Header con info de sesión -->
         <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
@@ -156,6 +156,7 @@ const timeLeftFormatted = computed(() => {
             </div>
         </UCard>
     </div>
+    </LabSessionGuard>
     </template>
      </UDashboardPanel>
 </template>

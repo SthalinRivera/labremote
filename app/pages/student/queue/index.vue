@@ -98,8 +98,8 @@ async function loadStatus() {
     try {
         const api = getApi()
         const [queueData, sessionData] = await Promise.all([
-            api('/queue/status').catch(() => null),
-            api('/session/current').catch(() => null)
+            api('/api/queue/status').catch(() => null),
+            api('/api/session/current').catch(() => null)
         ])
         queue.value = queueData
         session.value = sessionData
@@ -119,7 +119,7 @@ async function joinQueue() {
     loading.value = true
     try {
         const api = getApi()
-        await api('/queue/join', { method: 'POST' })
+        await api('/api/queue/join', { method: 'POST' })
         showToast('✅ En cola', 'Espera tu turno', 'success')
         await loadStatus()
     } catch (error: any) {
@@ -134,7 +134,7 @@ async function endSession() {
     if (!session.value) return
     try {
         const api = getApi()
-        await api('/session/end', { method: 'POST' })
+        await api('/api/session/end', { method: 'POST' })
         showToast('Sesión finalizada', 'Manual', 'info')
         await loadStatus()
     } catch (error) {
@@ -189,9 +189,7 @@ onUnmounted(() => {
             </UButton>
           </UTooltip>
 
-          <UDropdownMenu :items="items">
-            <UButton icon="i-lucide-plus" size="md" class="rounded-full" />
-          </UDropdownMenu>
+        
         </template>
       </UDashboardNavbar>
     <div class="container mx-auto px-4 py-6 max-w-7xl">

@@ -18,7 +18,7 @@ const userData = computed(() => ({
   name: user.value?.name || 'Usuario',
   email: user.value?.email || '',
   avatar: {
-    src: user.value?.avatar_url || 'https://ui.nuxt.com/avatar.png',
+    src: user.value?.avatar_url || '/avatar.png',
     alt: user.value?.name || 'Avatar'
   },
   role: user.value?.role || 'student'

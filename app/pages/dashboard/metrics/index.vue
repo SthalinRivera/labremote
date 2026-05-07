@@ -43,7 +43,7 @@ interface UserMetrics {
 // Obtener métricas de usuarios
 const { data: metricsResponse, status, refresh } = useAsyncData(
   'users-metrics',
-  () => api<{ data: UserMetrics[]; success: boolean }>('/metrics/all'),
+  () => api<{ data: UserMetrics[]; success: boolean }>('/api/metrics/all'),
   { default: () => ({ data: [], success: false }) }
 )
 

@@ -29,7 +29,7 @@ interface UserMetrics {
 // Obtener métricas del usuario específico
 const { data: metrics, status, refresh } = useAsyncData(
   `user-metrics-${userId.value}`,
-  () => api<{ success: boolean; data: UserMetrics }>(`/metrics/${userId.value}`),
+  () => api<{ success: boolean; data: UserMetrics }>(`/api/metrics/${userId.value}`),
   { default: () => ({ success: false, data: null }) }
 )
 

@@ -34,14 +34,14 @@ const api = useApi()
 // Obtener usuarios
 const { data: users, status, refresh } = useAsyncData(
   'users',
-  () => api<User[]>('/users'),
+  () => api<User[]>('/api/users'),
   { default: () => [] }
 )
 
 // --- Eliminaciones ---
 async function deleteUser(id: number) {
   try {
-    await api(`/users/${id}`, { method: 'DELETE' })
+    await api(`/api/users/${id}`, { method: 'DELETE' })
     toast.add({ title: 'Usuario eliminado', description: `ID ${id} eliminado` })
     await refresh()
     if (rowSelection.value[id]) delete rowSelection.value[id]
@@ -56,7 +56,7 @@ async function deleteSelectedUsers() {
   if (!ids.length) return
 
   try {
-    await Promise.all(ids.map(id => api(`/users/${id}`, { method: 'DELETE' })))
+    await Promise.all(ids.map(id => api(`/api/users/${id}`, { method: 'DELETE' })))
     toast.add({ title: `${ids.length} usuario(s) eliminado(s)` })
     await refresh()
     rowSelection.value = {}
@@ -68,7 +68,7 @@ async function deleteSelectedUsers() {
 // --- Cambio de rol ---
 async function changeRole(user: User, newRole: 'admin' | 'student') {
   try {
-    await api(`/users/${user.id}/role`, {
+    await api(`/api/users/${user.id}/role`, {
       method: 'PUT',
       body: { role: newRole }
     })
@@ -207,7 +207,7 @@ watch(roleFilter, (newVal) => {
 })
 async function approveUser(user: User) {
   try {
-    await api(`/users/${user.id}/approve`, { method: 'PUT' })
+    await api(`/api/users/${user.id}/approve`, { method: 'PUT' })
     toast.add({
       title: 'Usuario autorizado',
       description: `${user.email} ahora puede acceder al sistema.`,
@@ -229,7 +229,7 @@ async function filterByStatus() {
     await refresh()
   } else {
     const { data: filtered } = await useAsyncData('users-filtered', () =>
-      api<User[]>(`/users?status=${statusFilter.value}`)
+      api<User[]>(`/api/users?status=${statusFilter.value}`)
     )
     if (filtered.value) users.value = filtered.value
   }
@@ -320,7 +320,4 @@ const pagination = ref({ pageIndex: 0, pageSize: 10 })
 
 
   </UDashboardPanel>
-  <!-- Modales -->
-
-
 </template>

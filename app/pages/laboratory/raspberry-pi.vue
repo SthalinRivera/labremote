@@ -1,5 +1,26 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+
+    <UDashboardPanel id="dashboard">
+        <template #header>
+         <UDashboardNavbar title="Dashboard" :ui="{ right: 'gap-3' }">
+        <template #leading>
+          <UDashboardSidebarCollapse />
+        </template>
+
+        <template #right>
+          <UTooltip text="Notifications" :shortcuts="['N']">
+             <UColorModeButton />
+            <UButton color="neutral" variant="ghost" square @click="isNotificationsSlideoverOpen = true">
+              <UChip color="error" inset>
+                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
+              </UChip>
+            </UButton>
+          </UTooltip>
+        </template>
+      </UDashboardNavbar>
+      </template>
+      <template #body>
+  <div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-12">
         <div
@@ -38,6 +59,9 @@
     </div>
   </div>
 </template>
+    </UDashboardPanel>
+</template>
+
 <script setup lang="ts">
 
 definePageMeta({

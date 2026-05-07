@@ -6,6 +6,7 @@ const route = useRoute()
 const toast = useToast()
 const { user, isLogged } = useAuth()
 const { menuItems, isStudent, isAdmin } = useMenu()
+const lab = useLabStore()
 
 const open = ref(false)
 
@@ -33,15 +34,15 @@ const navigationLinks = computed(() => {
         }
     })
     
-    if (isStudent.value) {
-        mainItems.push({
-            label: 'Laboratorio',
-            icon: 'i-lucide-flask-conical',
-            to: '/laboratory/ios-jetson-nano',
-            badge: 'Activo',
-            onSelect: () => { open.value = false }
-        })
-    }
+    // if (isStudent.value) {
+    //     mainItems.push({
+    //         label: 'Laboratorio',
+    //         icon: 'i-lucide-flask-conical',
+    //         to: '/laboratory/ios-jetson-nano',
+    //         badge: 'Activo',
+    //         onSelect: () => { open.value = false }
+    //     })
+    // }
     
     if (isAdmin.value) {
         mainItems.push({
@@ -137,6 +138,25 @@ onMounted(async () => {
             variant: 'ghost'
         }]
     })
+})
+
+
+// Watcher para detectar cuando la sesión termina
+watch(() => lab.hasAccess, (hasAccess, oldHasAccess) => {
+    // Si perdió el acceso (sesión terminó) y antes tenía acceso
+    if (oldHasAccess === true && hasAccess === false) {
+        const currentPath = window.location.pathname
+        const labRoutes = ['/laboratory/camera', '/laboratory/ios-jetson-nano', '/laboratory/schematic']
+        
+        if (labRoutes.some(route => currentPath.startsWith(route))) {
+            toast.add({
+                title: 'Sesión finalizada',
+                description: 'Tu tiempo de laboratorio ha terminado',
+                color: 'warning'
+            })
+            navigateTo('/student')
+        }
+    }
 })
 </script>
 

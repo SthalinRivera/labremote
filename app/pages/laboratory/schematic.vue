@@ -93,6 +93,7 @@ onMounted(() => {
 
         <template #right>
           <UTooltip text="Notifications" :shortcuts="['N']">
+             <UColorModeButton />
             <UButton color="neutral" variant="ghost" square @click="isNotificationsSlideoverOpen = true">
               <UChip color="error" inset>
                 <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
@@ -100,9 +101,6 @@ onMounted(() => {
             </UButton>
           </UTooltip>
 
-          <UDropdownMenu :items="items">
-            <UButton icon="i-lucide-plus" size="md" class="rounded-full" />
-          </UDropdownMenu>
         </template>
       </UDashboardNavbar>
       </template>

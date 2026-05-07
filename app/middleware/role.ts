@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware((to) => {
     // Si la ruta requiere roles específicos
     if (allowedRoles && !allowedRoles.includes(user.value?.role)) {
         // Redirigir según su rol
-        if (user.value?.role === 'admin') return navigateTo('/admin')
+        if (user.value?.role === 'admin') return navigateTo('/dashboard')
         if (user.value?.role === 'student') return navigateTo('/student')
         return navigateTo('/')
     }

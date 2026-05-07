@@ -39,8 +39,8 @@ export const useLabStore = defineStore('lab', () => {
             const a = api()
 
             const [q, s] = await Promise.all([
-                a("/queue/status").catch(() => null),
-                a("/session/current").catch(() => null)
+                a("/api/queue/status").catch(() => null),
+                a("/api/session/current").catch(() => null)
             ])
 
             queue.value = q as Queue | null
@@ -73,10 +73,33 @@ export const useLabStore = defineStore('lab', () => {
 
             if (timeLeft.value <= 0) {
                 stopTimer()
+
+                // 🔥 Redirigir cuando termine la sesión
+                if (process.client) {
+                    // Mostrar notificación
+                    const toast = useToast()
+                    toast.add({
+                        title: '⏰ Sesión finalizada',
+                        description: 'Tu tiempo de laboratorio ha terminado. Puedes volver a entrar en la cola.',
+                        color: 'warning',
+                        icon: 'i-lucide-clock',
+                        timeout: 5000
+                    })
+
+                    // Redirigir según la ruta actual
+                    const currentPath = window.location.pathname
+                    const labRoutes = ['/laboratory/camera', '/laboratory/ios-jetson-nano', '/laboratory/schematic']
+
+                    if (labRoutes.some(route => currentPath.startsWith(route))) {
+                        navigateTo('/student')
+                    }
+                }
+
                 load()
             }
         }, 1000)
     }
+
 
     const stopTimer = () => {
         if (timer) clearInterval(timer)
@@ -91,7 +114,7 @@ export const useLabStore = defineStore('lab', () => {
         loading.value = true
 
         try {
-            await api()("/queue/join", { method: "POST" })
+            await api()("/api/queue/join", { method: "POST" })
             await load()
         } catch (e) {
             console.error("❌ join error", e)
@@ -102,7 +125,7 @@ export const useLabStore = defineStore('lab', () => {
 
     const end = async () => {
         try {
-            await api()("/session/end", { method: "POST" })
+            await api()("/api/session/end", { method: "POST" })
             await load()
         } catch (e) {
             console.error("❌ end error", e)
@@ -140,4 +163,4 @@ export const useLabStore = defineStore('lab', () => {
         load,
         end
     }
-})
+})  

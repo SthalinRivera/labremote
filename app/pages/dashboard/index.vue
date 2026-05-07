@@ -37,7 +37,7 @@ const isLoading = ref(true)
 async function loadStats() {
   try {
     isLoading.value = true
-    const response = await api('/dashboard/stats')
+    const response = await api('/api/dashboard/stats')
     
     stats.value = response.stats
     recentUsers.value = response.recentUsers

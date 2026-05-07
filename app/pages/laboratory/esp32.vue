@@ -23,9 +23,7 @@ definePageMeta({
             </UButton>
           </UTooltip>
 
-          <UDropdownMenu :items="items">
-            <UButton icon="i-lucide-plus" size="md" class="rounded-full" />
-          </UDropdownMenu>
+         
         </template>
       </UDashboardNavbar>
   
