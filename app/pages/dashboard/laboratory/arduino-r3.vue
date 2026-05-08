@@ -2,7 +2,7 @@
 const go = (path: string) => navigateTo(path)
 
 definePageMeta({
-    layout: "student",
+    layout: "dashboard",
     roles: ["student", "docente"]
 })
 </script>
@@ -10,19 +10,14 @@ definePageMeta({
 <template>
      <UDashboardPanel id="dashboard">
            <template #header>
-         <UDashboardNavbar title="Dashboard" :ui="{ right: 'gap-3' }">
+         <UDashboardNavbar title="Dashboard - Arduino" :ui="{ right: 'gap-3' }">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
-          <UTooltip text="Notifications" :shortcuts="['N']">
+        
              <UColorModeButton />
-            <UButton color="neutral" variant="ghost" square @click="isNotificationsSlideoverOpen = true">
-              <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
-              </UChip>
-            </UButton>
-          </UTooltip>
+     
 
        
         </template>
@@ -86,12 +81,12 @@ definePageMeta({
         <!-- BOTONES -->
         <div class="space-y-2">
 
-          <button @click="go('/programar')"
+          <button @click="go('/dashboard/laboratory/ios-jetson-nano')"
             class="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm py-2 rounded-lg transition">
             ▶ Ir a Programar
           </button>
 
-          <button @click="go('/documentacion')"
+          <button @click="go('/docs/hardware/arduino/arduino-overview')"
             class="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white text-sm py-2 rounded-lg transition">
             📄 Más documentación
           </button>

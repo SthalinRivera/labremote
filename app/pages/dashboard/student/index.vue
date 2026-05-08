@@ -100,7 +100,7 @@
 import { useRouter } from '#app'
 
 definePageMeta({
-    layout: 'student', // Layout sin header ni sidebar
+    layout: 'dashboard', // Layout sin header ni sidebar
     middleware: ['auth', 'role'],
     roles: ['student']
 })

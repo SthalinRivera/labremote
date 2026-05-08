@@ -8,14 +8,7 @@
         </template>
 
         <template #right>
-          <UTooltip text="Notifications" :shortcuts="['N']">
              <UColorModeButton />
-            <UButton color="neutral" variant="ghost" square @click="isNotificationsSlideoverOpen = true">
-              <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
-              </UChip>
-            </UButton>
-          </UTooltip>
         </template>
       </UDashboardNavbar>
       </template>
@@ -65,7 +58,7 @@
 <script setup lang="ts">
 
 definePageMeta({
-    layout: "student",
-    roles: ["student", "docente"]
+    layout: "dashboard",
+    roles: ["student", "admin"]
 })
 </script>

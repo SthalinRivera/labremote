@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 
 definePageMeta({
-    layout: "student",
+    layout: "dashboard",
     roles: ["student", "docente"]
 })
 

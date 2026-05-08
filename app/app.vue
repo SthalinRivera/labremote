@@ -24,8 +24,8 @@ useHead({
   }
 })
 
-const title = 'Lab-remote'
-const description = 'Automatización de sistemas IoT, robótica y electrónica'
+const title = 'Lab-remote-Iot'
+const description = 'Laboratorio remoto de Tecnologías IoT y Sistemas Distribuidos de la Escuela Profesional de Ingeniería de Sistemas de la UNDC'
 
 useSeoMeta({
   title,

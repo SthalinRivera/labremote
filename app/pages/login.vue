@@ -58,9 +58,9 @@ const loginWithGoogle = async (response: any) => {
         if (res.user.role === 'admin') {
             await navigateTo('/dashboard');
         } else if (res.user.role === 'student') {
-            await navigateTo('/student');
+            await navigateTo('/dashboard/student');
         } else {
-            await navigateTo('/');
+            await navigateTo('/dashboard');
         }
 
     } catch (e: any) {

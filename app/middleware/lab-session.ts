@@ -9,8 +9,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     // Solo Cámara y Jetson Nano requieren sesión activa
     const requiresLabSession = [
-        '/laboratory/camerasss',
-        '/laboratory/ios-jetson-nano'
+        '/dashboard/laboratory/camera',
+        '/dashboard/laboratory/ios-jetson-nano'
     ].includes(to.path)
 
     if (requiresLabSession && lab.session === null) {
@@ -18,6 +18,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
 
     if (requiresLabSession && !lab.hasAccess) {
-        return navigateTo('/student/queue')
+        return navigateTo('/dashboard/student/queue')
     }
 })

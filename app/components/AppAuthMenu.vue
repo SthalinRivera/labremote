@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { user, isLogged, isLoading, initAuth, logout } = useAuth()
-const { menuItems, isStudent, isAdmin } = useMenu() // 👈 Importar useMenu
+const { mainMenuItems, isStudent, isAdmin } = useMenu() // 👈 Importar useMenu
 const router = useRouter()
 
 const profileOpen = ref(false)
@@ -35,7 +35,7 @@ const dropdownItems = computed(() => {
     // Convertir menuItems a formato de dropdown
     if (isLogged.value) {
         // Filtrar items que no queremos en el dropdown (ej: documentación)
-        const filteredItems = menuItems.value.filter(item => 
+        const filteredItems = mainMenuItems.value.filter(item => 
             item.label !== 'Documentación' && // Excluir documentación del dropdown
             item.label !== 'Nosotros'
         )

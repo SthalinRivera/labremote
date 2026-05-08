@@ -3,13 +3,19 @@
 
         <!-- LEFT -->
         <template #left>
-            <NuxtLink to="/" class="font-bold">
-                LABREMOTE
-            </NuxtLink>
+           <NuxtLink to="/" class="font-bold">
+    <img
+      :src="colorMode.value === 'dark'
+        ? '/logo-dark.png'
+        : '/logo.png'"
+      alt="Lab"
+      class="w-auto h-10"
+    />
+  </NuxtLink>
         </template>
 
         <!-- CENTER MENU -->
-        <AppMenu :items="menuItems" />
+        <AppMenu :items="mainMenuItems" />
 
         <!-- RIGHT AUTH (COMPONENTE SEPARADO) -->
         <template #right>
@@ -20,5 +26,7 @@
 </template>
 
 <script setup lang="ts">
-const { menuItems } = useMenu()
+const { mainMenuItems } = useMenu()
+const colorMode = useColorMode()
+
 </script>

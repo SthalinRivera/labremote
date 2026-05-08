@@ -2,11 +2,11 @@
 import { sub } from 'date-fns'
 import type { Period, Range } from '~/types'
 import type { User } from '~/types'
-
+const {isNotificationsSlideoverOpen} = useDashboard()
 definePageMeta({
   layout: "dashboard",
   middleware: ['auth', 'role'],
-  roles: ['admin']
+  roles: ['admin'],
 })
 
 const api = useApi()
@@ -101,7 +101,7 @@ onUnmounted(() => {
           </UTooltip>
 
           <UTooltip text="Notificaciones" :shortcuts="['N']">
-            <UButton color="neutral" variant="ghost" square>
+            <UButton color="neutral" variant="ghost" square @click="isNotificationsSlideoverOpen = true">
               <UChip inset>
                 <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
               </UChip>

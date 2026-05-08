@@ -8,7 +8,7 @@ defineProps<{
 const teams = ref([{
   label: 'Lab Remote Iot',
   avatar: {
-    src: '/logo.png',
+    src: '/logo-icon.png',
     alt: 'Lab Remote Iot'
   }
 }, {

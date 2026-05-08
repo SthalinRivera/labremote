@@ -56,7 +56,7 @@ const items = computed<DropdownMenuItem[][]>(() => {
     mainOptions.push({
       label: 'Mi Dashboard',
       icon: 'i-lucide-home',
-      to: '/student'
+      to: '/dashboard/student'
     })
   
   }

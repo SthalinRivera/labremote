@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 definePageMeta({
-    layout: "student",
+    layout: "dashboard",
     roles: ["student", "docente"]
 })
 </script>
@@ -9,19 +9,14 @@ definePageMeta({
 
        <UDashboardPanel id="dashboard">
            <template #header>
-         <UDashboardNavbar title="Dashboard" :ui="{ right: 'gap-3' }">
+         <UDashboardNavbar title="Dashboard - ESP32" :ui="{ right: 'gap-3' }">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
-          <UTooltip text="Notifications" :shortcuts="['N']">
+     
              <UColorModeButton />
-            <UButton color="neutral" variant="ghost" square @click="isNotificationsSlideoverOpen = true">
-              <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
-              </UChip>
-            </UButton>
-          </UTooltip>
+         
 
          
         </template>

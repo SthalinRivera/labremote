@@ -8,10 +8,10 @@ interface Session {
     remaining: number
 }
 
+// stores/lab.ts (corrección)
 export const useLabStore = defineStore('lab', () => {
     const config = useRuntimeConfig()
 
-    // STATE (tipado correcto)
     const queue = ref<Queue | null>(null)
     const session = ref<Session | null>(null)
     const timeLeft = ref<number | null>(null)
@@ -20,11 +20,9 @@ export const useLabStore = defineStore('lab', () => {
     let poll: ReturnType<typeof setInterval> | null = null
     let timer: ReturnType<typeof setInterval> | null = null
 
-    // API
     const api = () => {
         if (process.client) {
             const token = localStorage.getItem("token")
-
             return $fetch.create({
                 baseURL: config.public.apiUrl,
                 headers: { Authorization: `Bearer ${token}` }
@@ -33,11 +31,9 @@ export const useLabStore = defineStore('lab', () => {
         return $fetch
     }
 
-    // LOAD (robusto)
     const load = async () => {
         try {
             const a = api()
-
             const [q, s] = await Promise.all([
                 a("/api/queue/status").catch(() => null),
                 a("/api/session/current").catch(() => null)
@@ -46,60 +42,45 @@ export const useLabStore = defineStore('lab', () => {
             queue.value = q as Queue | null
             session.value = s as Session | null
 
-            // CONTROL TIMER (solo si cambia)
-            if (session.value?.remaining !== undefined) {
+            // ✅ Log para debugging
+            console.log('🔍 LabStore load:', {
+                session: session.value,
+                hasAccess: !!session?.value
+            })
+
+            if (session.value?.remaining !== undefined && session.value?.remaining > 0) {
                 if (timeLeft.value !== session.value.remaining) {
                     startTimer(session.value.remaining)
                 }
             } else {
                 stopTimer()
             }
-
         } catch (e) {
             console.error("❌ load error", e)
         }
     }
 
-    // TIMER
     const startTimer = (sec: number) => {
         if (timer) clearInterval(timer)
-
         timeLeft.value = sec
-
         timer = setInterval(() => {
             if (timeLeft.value === null) return
-
             timeLeft.value--
-
             if (timeLeft.value <= 0) {
                 stopTimer()
-
-                // 🔥 Redirigir cuando termine la sesión
                 if (process.client) {
-                    // Mostrar notificación
                     const toast = useToast()
                     toast.add({
                         title: '⏰ Sesión finalizada',
-                        description: 'Tu tiempo de laboratorio ha terminado. Puedes volver a entrar en la cola.',
-                        color: 'warning',
-                        icon: 'i-lucide-clock',
-                        timeout: 5000
+                        description: 'Tu tiempo de laboratorio ha terminado.',
+                        color: 'warning'
                     })
-
-                    // Redirigir según la ruta actual
-                    const currentPath = window.location.pathname
-                    const labRoutes = ['/laboratory/camera', '/laboratory/ios-jetson-nano', '/laboratory/schematic']
-
-                    if (labRoutes.some(route => currentPath.startsWith(route))) {
-                        navigateTo('/student')
-                    }
+                    navigateTo('/dashboard/laboratory/session-status')
                 }
-
                 load()
             }
         }, 1000)
     }
-
 
     const stopTimer = () => {
         if (timer) clearInterval(timer)
@@ -107,12 +88,9 @@ export const useLabStore = defineStore('lab', () => {
         timeLeft.value = null
     }
 
-    // ACTIONS
     const join = async () => {
         if (queue.value || session.value) return
-
         loading.value = true
-
         try {
             await api()("/api/queue/join", { method: "POST" })
             await load()
@@ -132,24 +110,25 @@ export const useLabStore = defineStore('lab', () => {
         }
     }
 
-    // INIT GLOBAL (evita duplicados)
     const init = () => {
         if (poll) return
-
         load()
-        poll = setInterval(load, 3000)
+        poll = setInterval(load, 5000) // Aumentado a 5 segundos para menos carga
     }
 
     const stop = () => {
         if (poll) clearInterval(poll)
         if (timer) clearInterval(timer)
-
         poll = null
         timer = null
     }
 
-    // PERMISO
-    const hasAccess = computed(() => !!session.value)
+    // ✅ hasAccess correctamente definido
+    const hasAccess = computed(() => {
+        const hasActiveSession = !!session.value && (session.value?.remaining ?? 0) > 0
+        console.log('🔍 hasAccess computed:', hasActiveSession, session.value)
+        return hasActiveSession
+    })
 
     return {
         queue,
@@ -163,4 +142,4 @@ export const useLabStore = defineStore('lab', () => {
         load,
         end
     }
-})  
+})
