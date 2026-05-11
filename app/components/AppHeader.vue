@@ -1,28 +1,37 @@
 <template>
-    <UHeader>
+  <UHeader>
 
-        <!-- LEFT -->
-        <template #left>
-           <NuxtLink to="/" class="font-bold">
-    <img
-      :src="colorMode.value === 'dark'
-        ? '/logo-dark.png'
-        : '/logo.png'"
-      alt="Lab"
-      class="w-auto h-10"
-    />
-  </NuxtLink>
-        </template>
+    <!-- LEFT -->
+    <template #left>
+      <NuxtLink
+        to="/"
+        class="flex items-center font-bold"
+      >
+        <!-- Logo Light -->
+        <img
+          src="/logo.png"
+          alt="Lab"
+          class="h-10 w-auto dark:hidden"
+        />
 
-        <!-- CENTER MENU -->
-        <AppMenu :items="mainMenuItems" />
+        <!-- Logo Dark -->
+        <img
+          src="/logo-dark.png"
+          alt="Lab"
+          class="hidden h-10 w-auto dark:block"
+        />
+      </NuxtLink>
+    </template>
 
-        <!-- RIGHT AUTH (COMPONENTE SEPARADO) -->
-        <template #right>
-            <AppAuthMenu />
-        </template>
+    <!-- CENTER MENU -->
+    <AppMenu :items="mainMenuItems" />
 
-    </UHeader>
+    <!-- RIGHT -->
+    <template #right>
+      <AppAuthMenu />
+    </template>
+
+  </UHeader>
 </template>
 
 <script setup lang="ts">

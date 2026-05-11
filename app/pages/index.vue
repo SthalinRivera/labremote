@@ -12,53 +12,13 @@ const goToFeatures = () => {
 <template>
     <div class="text-gray-900 dark:text-gray-100 transition-colors">
 
-        <!-- Hero Section -->
-        <section class="min-h-[90vh] flex items-center justify-center overflow-hidden relative">
-            <!-- Animated background (opcional) -->
-           
-
-            <div class="max-w-7xl mx-auto px-6 py-16 lg:py-24 z-10">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <!-- Texto -->
-                    <div class="space-y-6 text-center lg:text-left">
-                        <UBadge color="primary" variant="subtle" class="mx-auto lg:mx-0">
-                            IoT + IA
-                        </UBadge>
-                        <h1 class="text-4xl md:text-6xl font-bold tracking-tight">
-                            Laboratorio Remoto
-                        </h1>
-                        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto lg:mx-0">
-                            Accede a hardware real desde cualquier lugar. Controla dispositivos electrónicos,
-                            ejecuta experimentos y visualiza resultados en tiempo real con nuestra plataforma educativa.
-                        </p>
-                        <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
-                            <UButton size="xl" color="primary"
-                                :label="isLogged ? 'Ir al laboratorio' : 'Comenzar ahora'" icon="i-lucide-rocket"
-                                @click="goToStart" />
-                            <UButton size="xl" variant="outline" label="Ver características"
-                                icon="i-lucide-chevron-down" @click="goToFeatures" />
-                        </div>
-                        <!-- Stack tecnológico -->
-                        <div class="pt-6 flex flex-wrap gap-2 justify-center lg:justify-start">
-                            <UBadge variant="soft" size="lg"
-                                v-for="tech in ['Jetson Nano', 'Raspberry Pi', 'Arduino', 'ESP32', 'Sensores IoT']"
-                                :key="tech">
-                                {{ tech }}
-                            </UBadge>
-                        </div>
-                    </div>
-                    <!-- Imagen hero -->
-                    <div class="relative flex justify-center">
-                        <div
-                            class="absolute inset-0 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full blur-3xl opacity-20 dark:opacity-30 animate-pulse" />
-                        <img src="/images/hero.png" alt="Laboratorio remoto"
-                            class="relative w-full max-w-md lg:max-w-lg drop-shadow-2xl" />
-                    </div>
-                </div>
-            </div>
-        </section>
+       
 
         <!-- Features Section (cards) -->
+    
+                    
+          <HeroSection/> 
+ <!-- Features Section (cards) -->
         <section id="features" class="py-20 bg-gray-50 dark:bg-gray-900/50">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="text-center max-w-3xl mx-auto mb-16">
@@ -218,5 +178,99 @@ const goToFeatures = () => {
 </template>
 
 <style scoped>
-/* Transiciones suaves y animación de pulso se manejan con Tailwind, no es necesario más */
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse-slow {
+    0%, 100% {
+        opacity: 0.2;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.4;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+@keyframes scroll {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(15px); opacity: 0; }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-300 { animation-delay: 0.3s; }
+.animation-delay-400 { animation-delay: 0.4s; }
+
+.animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+    animation: float 6s ease-in-out infinite 3s;
+}
+
+.animate-scroll {
+    animation: scroll 2s ease-in-out infinite;
+}
+
+.perspective-1200 {
+    perspective: 1200px;
+}
+
+.transform-gpu {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.rotate-y-\[-15deg\] {
+    transform: rotateY(-15deg) !important;
+}
+
+.rotate-y-\[12deg\] {
+    transform: rotateY(12deg) !important;
+}
+
+/* Hover effects */
+.group-hover\/cards\:rotate-y-12:hover {
+    transform: rotateY(12deg) !important;
+}
+
+.group-hover\/cards\:-rotate-y-\[12deg\]:hover {
+    transform: rotateY(-12deg) !important;
+}
+
+.group-hover\/cards\:scale-102:hover {
+    transform: scale(1.02);
+}
 </style>

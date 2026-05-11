@@ -173,6 +173,7 @@ const items = computed<DropdownMenuItem[][]>(() => {
     :content="{ align: 'center', collisionPadding: 12 }"
     :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }"
   >
+
     <UButton
       color="neutral"
       variant="ghost"

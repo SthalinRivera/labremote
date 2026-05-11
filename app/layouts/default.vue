@@ -9,10 +9,8 @@
       <slot />
     </main>
 
-    <!-- FOOTER -->
-    <footer class="text-center py-6 text-gray-500 bg-gray-100 dark:bg-gray-900">
-      © 2026 LABREMOTE
-    </footer>
+<!-- FOOTER -->
+<Footer />
 
   </div>
 </template>

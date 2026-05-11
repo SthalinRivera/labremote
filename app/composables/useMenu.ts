@@ -32,13 +32,7 @@ export const useMenu = () => {
                 icon: 'i-lucide-home',
                 roles: ['visitor', 'student', 'admin']
             },
-            {
-                id: 'about',
-                label: 'Nosotros',
-                to: '/about',
-                icon: 'i-lucide-users',
-                roles: ['visitor', 'student', 'admin']
-            },
+
             {
                 id: 'docs',
                 label: 'Documentación',
@@ -57,63 +51,6 @@ export const useMenu = () => {
                 onSelect: () => closeMenu()
             },
             {
-                id: 'student-queue',
-                label: 'Cola',
-                to: '/dashboard/student/queue',
-                icon: 'i-lucide-clock',
-                roles: ['student'],
-                onSelect: () => closeMenu()
-            },
-
-            // === ITEMS DE LABORATORIO (requieren acceso) ===
-            {
-                id: 'lab-schematic',
-                label: 'Esquemático',
-                to: '/dashboard/laboratory/schematic',
-                icon: 'i-lucide-file-text',
-                roles: ['student'],
-
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'lab-jetson',
-                label: 'Jetson Nano',
-                to: '/dashboard/laboratory/ios-jetson-nano',
-                icon: 'i-lucide-microchip',
-                roles: ['student'],
-                requiresLabAccess: true,
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'lab-camera',
-                label: 'Cámara',
-                to: '/dashboard/laboratory/camera',
-                icon: 'i-lucide-camera',
-                roles: ['student'],
-                requiresLabAccess: true,
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'lab-arduino',
-                label: 'Esquem. Arduino',
-                to: '/dashboard/laboratory/arduino-r3',
-                icon: 'i-lucide-microchip',
-                roles: ['student'],
-
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'lab-esp32',
-                label: 'Esquem. Esp32',
-                to: '/dashboard/laboratory/esp32',
-                icon: 'i-lucide-microchip',
-                roles: ['student'],
-
-                onSelect: () => closeMenu()
-            },
-
-            // === ITEMS DE ADMINISTRADOR ===
-            {
                 id: 'admin-dashboard',
                 label: 'Dashboard',
                 to: '/dashboard',
@@ -122,6 +59,64 @@ export const useMenu = () => {
                 onSelect: () => closeMenu()
             },
             {
+                id: 'student-queue',
+                label: 'Cola',
+                to: '/dashboard/student/queue',
+                icon: 'i-lucide-clipboard-clock',
+                roles: ['student', 'admin'],
+                onSelect: () => closeMenu()
+            },
+
+            // === ITEMS DE LABORATORIO (requieren acceso) ===
+            {
+                id: 'lab-schematic',
+                label: 'Esquemático',
+                to: '/dashboard/laboratory/schematic',
+                icon: 'i-lucide-caravan',
+                roles: ['student', 'admin'],
+
+                onSelect: () => closeMenu()
+            },
+            {
+                id: 'lab-jetson',
+                label: 'Laboratorio',
+                to: '/dashboard/laboratory/ios-jetson-nano',
+                icon: 'i-lucide-laptop',
+                roles: ['student', 'admin'],
+                requiresLabAccess: true,
+                onSelect: () => closeMenu()
+            },
+            {
+                id: 'lab-camera',
+                label: 'Cámara',
+                to: '/dashboard/laboratory/camera',
+                icon: 'i-lucide-video',
+                roles: ['student', 'admin'],
+                requiresLabAccess: true,
+                onSelect: () => closeMenu()
+            },
+            {
+                id: 'lab-arduino',
+                label: 'Esquem. Arduino',
+                to: '/dashboard/laboratory/arduino-r3',
+                icon: 'i-lucide-circuit-board',
+                roles: ['student', 'admin'],
+
+                onSelect: () => closeMenu()
+            },
+            {
+                id: 'lab-esp32',
+                label: 'Esquem. Esp32',
+                to: '/dashboard/laboratory/esp32',
+                icon: 'i-lucide-circuit-board',
+                roles: ['student', 'admin'],
+
+                onSelect: () => closeMenu()
+            },
+
+            // === ITEMS DE ADMINISTRADOR ===
+
+            {
                 id: 'admin-users',
                 label: 'Usuarios',
                 to: '/dashboard/users',
@@ -129,7 +124,7 @@ export const useMenu = () => {
                 roles: ['admin'],
                 onSelect: () => closeMenu()
             },
-             {
+            {
                 id: 'admin-sesions',
                 label: 'Sesiones',
                 to: '/dashboard/session',
@@ -146,26 +141,17 @@ export const useMenu = () => {
                 onSelect: () => closeMenu()
             },
             {
-                id: 'admin-labs',
-                label: 'Laboratorio',
-                to: '/dashboard/laboratory/ios-jetson-nano',
-                icon: 'i-lucide-flask-conical',
-                roles: ['admin'],
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'admin-queue',
-                label: 'Cola Global',
-                to: '/dashboard/student/queue',
-                icon: 'i-lucide-clock',
-                roles: ['admin'],
-                onSelect: () => closeMenu()
-            },
-            {
                 id: 'admin-reports',
                 label: 'Reportes',
                 to: '/dashboard/reports',
                 icon: 'i-lucide-file-text',
+                roles: ['admin'],
+                onSelect: () => closeMenu()
+            }, {
+                id: 'admin-configuration',
+                label: 'Configuración',
+                to: '/dashboard/laboratory/configuration',
+                icon: 'i-lucide-settings',
                 roles: ['admin'],
                 onSelect: () => closeMenu()
             },

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Toast } from '@nuxt/ui'
-
+const { user, logout } = useAuth()
 definePageMeta({
     layout: 'dashboard',
     roles: ['student', 'admin']
@@ -29,7 +29,7 @@ interface Session {
 // ---------- Estado ----------
 const config = useRuntimeConfig()
 const toast = useToast()
-const user = ref<User | null>(null)
+const user1 = ref<User | null>(null)
 const queue = ref<QueueStatus | null>(null)
 const session = ref<Session | null>(null)
 const loading = ref(false)
@@ -55,7 +55,7 @@ const loadUser = async () => {
     try {
         const api = getApi()
         const userData = await api('/api/auth/me')
-        user.value = userData
+        user1.value = userData
     } catch (error) {
         console.error('Error loading user:', error)
     }
@@ -246,11 +246,7 @@ onUnmounted(() => {
     if (countdownInterval) clearInterval(countdownInterval)
 })
 
-// Logout
-const logout = () => {
-    localStorage.removeItem('token')
-    navigateTo('/login')
-}
+
 </script>
 
 <template>
@@ -274,7 +270,7 @@ const logout = () => {
                         size="md" 
                     />
                     <div>
-                        <h1 class="text-xl font-bold">Hola, {{ user?.name || 'Estudiante' }}</h1>
+                        <h1 class="text-xl font-bold">Hola, {{ user?.name || 'Bienvenido' }}</h1>
                         <p class="text-sm text-gray-500">{{ user?.email }}</p>
                         <UBadge v-if="user?.role === 'admin'" color="purple" size="xs">
                             Administrador

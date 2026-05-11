@@ -176,8 +176,8 @@ const colorMode = useColorMode();
         <UCard class="w-full max-w-md shadow-xl transform transition-all duration-300 hover:shadow-2xl">
             <template #header>
                 <div class="text-center">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center mx-auto shadow-lg">
-                        <span class="text-white text-2xl font-bold">LR</span>
+                    <div class="w-20 h-16 rounded-2xl  flex items-center justify-center mx-auto shadow-lg">
+                       <img src="/logo-icon.png" alt="undc" class="w-full h-full object-cover">
                     </div>
                     <h1 class="text-2xl font-bold mt-4 text-gray-900 dark:text-white">
                         Laboratorio Remoto
@@ -259,25 +259,10 @@ const colorMode = useColorMode();
                     </div>
                 </div>
 
-                <!-- Información adicional -->
-                <div class="text-center text-xs text-gray-500 dark:text-gray-400">
-                    <p>Al iniciar sesión aceptas nuestros</p>
-                    <p>
-                        <NuxtLink to="/terms" class="text-primary-500 hover:underline">Términos de servicio</NuxtLink>
-                        y
-                        <NuxtLink to="/privacy" class="text-primary-500 hover:underline">Política de privacidad</NuxtLink>
-                    </p>
-                </div>
+           
             </div>
 
-            <template #footer>
-                <div class="text-center text-xs text-gray-500">
-                    ¿Necesitas ayuda?
-                    <NuxtLink to="/support" class="text-primary-500 hover:underline">
-                        Contacta a soporte
-                    </NuxtLink>
-                </div>
-            </template>
+      
         </UCard>
 
         <!-- Botón de modo oscuro flotante -->

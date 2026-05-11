@@ -31,6 +31,7 @@ const items = computed<DropdownMenuItem[][]>(() => {
 </script>
 
 <template>
+
   <UDropdownMenu
     :items="items"
     :content="{ align: 'center', collisionPadding: 12 }"

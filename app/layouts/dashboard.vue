@@ -4,9 +4,20 @@ const toast = useToast()
 const { mainMenuItems, footerMenuItems, searchGroups } = useMenu()
 const open = ref(false)
 
+// Cookie para consentimiento
+const cookieConsent = useCookie('cookie-consent')
+// Cookie para saber si ya se mostró el aviso
+const cookieNoticeShown = useCookie('cookie-notice-shown', {
+  default: () => false,
+  maxAge: 60 * 60 * 24 * 365 // 1 año
+})
+
 onMounted(async () => {
-    const cookie = useCookie('cookie-consent')
-    if (cookie.value === 'accepted') return
+    // Solo mostrar si no ha dado consentimiento Y no se ha mostrado antes
+    if (cookieConsent.value === 'accepted') return
+    
+    // Si ya se mostró el aviso antes, no mostrar de nuevo
+    if (cookieNoticeShown.value === true) return
     
     toast.add({
         title: 'Usamos cookies para mejorar tu experiencia',
@@ -17,17 +28,21 @@ onMounted(async () => {
             color: 'neutral',
             variant: 'outline',
             onClick: () => {
-                cookie.value = 'accepted'
+                cookieConsent.value = 'accepted'
+                cookieNoticeShown.value = true
             }
         }, {
             label: 'Rechazar',
             color: 'neutral',
-            variant: 'ghost'
+            variant: 'ghost',
+            onClick: () => {
+                cookieNoticeShown.value = true // Marcar como mostrado aunque rechace
+            }
         }]
     })
 })
 
-// Watcher para sesión de laboratorio
+// El resto de tu código permanece igual...
 const lab = useLabStore()
 watch(() => lab.hasAccess, (hasAccess, oldHasAccess) => {
     if (oldHasAccess === true && hasAccess === false) {
@@ -45,8 +60,6 @@ watch(() => lab.hasAccess, (hasAccess, oldHasAccess) => {
     }
 })
 
-
-// Inicializar el store cuando el usuario está logueado
 onMounted(() => {
     const { isLogged } = useAuth()
     if (isLogged.value) {
@@ -54,7 +67,6 @@ onMounted(() => {
     }
 })
 
-// Cleanup
 onUnmounted(() => {
     lab.stop()
 })
@@ -95,9 +107,11 @@ onUnmounted(() => {
                     tooltip 
                     class="mt-auto" 
                 />
+                 <LabStatusBar />
             </template>
 
             <template #footer="{ collapsed }">
+                   
                 <UserMenu :collapsed="collapsed" />
             </template>
         </UDashboardSidebar>
@@ -110,5 +124,8 @@ onUnmounted(() => {
 
         <!-- Notificaciones -->
         <NotificationsSlideover />
+      
     </UDashboardGroup>
+    
+
 </template>

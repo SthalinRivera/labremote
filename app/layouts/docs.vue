@@ -25,7 +25,10 @@ const navigation = inject<Ref<ContentNavigationItem[]>>('navigation')
                 </UPage>
             </UContainer>
         </UMain>
-
+s
         <AppFooter />
+
+<!-- FOOTER -->
+<Footer />
     </div>
 </template>
