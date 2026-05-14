@@ -451,7 +451,7 @@ onMounted(() => {
                                     <br>
                                     <strong>Jetson Nano, Raspberry Pi y Cámara</strong> requieren sesión activa.
                                 </p>
-                                <UButton size="sm" class="mt-2" variant="outline" to="/student/queue">
+                                <UButton size="sm" class="mt-2" variant="outline" to="/dashboard/student/queue">
                                     <template #leading>
                                         <UIcon name="i-lucide-clock" />
                                     </template>

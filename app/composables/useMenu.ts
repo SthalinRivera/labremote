@@ -1,265 +1,220 @@
-// composables/useMenu.ts
 import type { NavigationMenuItem } from '@nuxt/ui'
 
 export interface MenuItem extends NavigationMenuItem {
     id?: string
     roles?: ('admin' | 'student' | 'visitor')[]
     requiresLabAccess?: boolean
-    requiresSession?: boolean
-    permissions?: string[]
 }
 
+// ----------------------------------------------
+// 1. Ítems del FOOTER (abajo del sidebar)
+// ----------------------------------------------
+const FOOTER_ITEMS: MenuItem[] = [
+    { id: 'feedback', label: 'Feedback', icon: 'i-lucide-message-circle', to: '#', target: '_blank', roles: ['student', 'admin'] },
+    { id: 'help', label: 'Ayuda', icon: 'i-lucide-info', to: '/dashboard/help', roles: ['student', 'admin'] },
+    { id: 'docs', label: 'Documentación', icon: 'i-lucide-book-open', to: '/docs', roles: ['visitor', 'student', 'admin'] }
+]
+
+// ----------------------------------------------
+// 2. Menú PRINCIPAL (estructura plana + grupos)
+// ----------------------------------------------
+const MAIN_MENU_STRUCTURE: MenuItem[] = [
+    // === Ítems directos (sin acordeón) ===
+    {
+        id: 'home',
+        label: 'Inicio',
+        icon: 'i-lucide-home',
+        to: '/',
+        roles: ['visitor', 'student', 'admin']
+    },
+    {
+        id: 'dashboard',
+        label: 'Dashboard',
+        icon: 'i-lucide-layout-dashboard',
+        to: '/dashboard',
+        roles: ['admin']  // solo admin
+    },
+    // Para estudiantes: perfil y cola como directos
+    {
+        id: 'student-profile',
+        label: 'Mi Perfil',
+        icon: 'i-lucide-user',
+        to: '/dashboard/student/profile',
+        roles: ['student']
+    },
+    {
+        id: 'student-queue',
+        label: 'Cola',
+        icon: 'i-lucide-clipboard-clock',
+        to: '/dashboard/student/queue',
+        roles: ['student', 'admin']
+    },
+
+    // === Grupo LABORATORIO (colapsable, requiere acceso) ===
+    {
+        id: 'laboratory',
+        label: 'Laboratorio',
+        roles: ['student', 'admin'],
+        icon: 'i-lucide-flask-conical',
+        requiresLabAccess: true,
+        children: [
+            { id: 'lab-jetson', label: 'Jetson Nano', to: '/dashboard/laboratory/ios-jetson-nano', icon: 'i-lucide-laptop', roles: ['student', 'admin'] },
+            { id: 'lab-camera', label: 'Cámara', to: '/dashboard/laboratory/camera', icon: 'i-lucide-video', roles: ['student', 'admin'] },
+        ]
+    },
+    {
+        id: 'recursos',
+        label: 'Recursos',
+        roles: ['student', 'admin'],
+        icon: 'i-lucide-flask-conical',
+        children: [
+            { id: 'lab-schematic', label: 'Esquemático', to: '/dashboard/laboratory/schematic', icon: 'i-lucide-caravan', roles: ['student', 'admin'] },
+            { id: 'lab-arduino', label: 'Arduino R3', to: '/dashboard/laboratory/arduino-r3', icon: 'i-lucide-circuit-board', roles: ['student', 'admin'] },
+            { id: 'lab-esp32', label: 'ESP32', to: '/dashboard/laboratory/esp32', icon: 'i-lucide-circuit-board', roles: ['student', 'admin'] }
+        ]
+    },
+
+
+    // === Grupo MÉTRICAS (solo admin, colapsable) ===
+    {
+        id: 'metrics',
+        label: 'Métricas',
+        icon: 'i-lucide-chart-line',
+        roles: ['admin'],
+        children: [
+            { id: 'admin-general-metrics', label: 'General', to: '/dashboard/general-metrics', icon: 'i-lucide-chart-bar' },
+            { id: 'admin-ai-metrics', label: 'IA', to: '/dashboard/ai-metrics', icon: 'i-lucide-chart-line' },
+            { id: 'admin-video-metrics', label: 'Video', to: '/dashboard/video-metrics', icon: 'i-lucide-chart-line' },
+            { id: 'admin-system-metrics', label: 'Sistema', to: '/dashboard/system-metrics', icon: 'i-lucide-chart-line' }
+        ]
+    },
+
+    // === Ítems directos para admin ===
+    {
+        id: 'reports',
+        label: 'Reportes',
+        icon: 'i-lucide-file-text',
+        to: '/dashboard/reports',
+        roles: ['admin']
+    },
+    {
+        id: 'configuration',
+        label: 'Configuración',
+        icon: 'i-lucide-settings',
+        to: '/dashboard/laboratory/configuration',
+        roles: ['admin']
+    }
+]
+
 export const useMenu = () => {
-    const route = useRoute()
     const { isLogged, user } = useAuth()
     const lab = useLabStore()
+    const sidebarOpen = useState('sidebar-open')
 
-
-    // ✅ Debug para ver el estado
-    watch(() => lab.hasAccess, (newVal) => {
-        console.log('🔍 Menu - lab.hasAccess changed:', newVal)
-    })
-
-
-    // Definición CENTRALIZADA de TODOS los menús
-    const allMenuItems = computed<MenuItem[]>(() => {
-        const baseItems: MenuItem[] = [
-            // === ITEMS PÚBLICOS (visitors) ===
-            {
-                id: 'home',
-                label: 'Inicio',
-                to: '/',
-                icon: 'i-lucide-home',
-                roles: ['visitor', 'student', 'admin']
-            },
-
-            {
-                id: 'docs',
-                label: 'Documentación',
-                to: '/docs',
-                icon: 'i-lucide-book-open',
-                roles: ['visitor', 'student', 'admin']
-            },
-
-            // === ITEMS DE ESTUDIANTES ===
-            {
-                id: 'student-profile',
-                label: 'Mi Perfil',
-                to: '/dashboard/student/profile',
-                icon: 'i-lucide-user',
-                roles: ['student'],
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'admin-dashboard',
-                label: 'Dashboard',
-                to: '/dashboard',
-                icon: 'i-lucide-layout-dashboard',
-                roles: ['admin'],
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'student-queue',
-                label: 'Cola',
-                to: '/dashboard/student/queue',
-                icon: 'i-lucide-clipboard-clock',
-                roles: ['student', 'admin'],
-                onSelect: () => closeMenu()
-            },
-
-            // === ITEMS DE LABORATORIO (requieren acceso) ===
-            {
-                id: 'lab-schematic',
-                label: 'Esquemático',
-                to: '/dashboard/laboratory/schematic',
-                icon: 'i-lucide-caravan',
-                roles: ['student', 'admin'],
-
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'lab-jetson',
-                label: 'Laboratorio',
-                to: '/dashboard/laboratory/ios-jetson-nano',
-                icon: 'i-lucide-laptop',
-                roles: ['student', 'admin'],
-                requiresLabAccess: true,
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'lab-camera',
-                label: 'Cámara',
-                to: '/dashboard/laboratory/camera',
-                icon: 'i-lucide-video',
-                roles: ['student', 'admin'],
-                requiresLabAccess: true,
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'lab-arduino',
-                label: 'Esquem. Arduino',
-                to: '/dashboard/laboratory/arduino-r3',
-                icon: 'i-lucide-circuit-board',
-                roles: ['student', 'admin'],
-
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'lab-esp32',
-                label: 'Esquem. Esp32',
-                to: '/dashboard/laboratory/esp32',
-                icon: 'i-lucide-circuit-board',
-                roles: ['student', 'admin'],
-
-                onSelect: () => closeMenu()
-            },
-
-            // === ITEMS DE ADMINISTRADOR ===
-
-            {
-                id: 'admin-users',
-                label: 'Usuarios',
-                to: '/dashboard/users',
-                icon: 'i-lucide-users',
-                roles: ['admin'],
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'admin-sesions',
-                label: 'Sesiones',
-                to: '/dashboard/session',
-                icon: 'i-lucide-clock',
-                roles: ['admin'],
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'admin-metrics',
-                label: 'Métricas Globales',
-                to: '/dashboard/metrics',
-                icon: 'i-lucide-chart-bar',
-                roles: ['admin'],
-                onSelect: () => closeMenu()
-            },
-            {
-                id: 'admin-reports',
-                label: 'Reportes',
-                to: '/dashboard/reports',
-                icon: 'i-lucide-file-text',
-                roles: ['admin'],
-                onSelect: () => closeMenu()
-            }, {
-                id: 'admin-configuration',
-                label: 'Configuración',
-                to: '/dashboard/laboratory/configuration',
-                icon: 'i-lucide-settings',
-                roles: ['admin'],
-                onSelect: () => closeMenu()
-            },
-
-            // === ITEMS SECUNDARIOS (footer) ===
-            {
-                id: 'feedback',
-                label: 'Feedback',
-                icon: 'i-lucide-message-circle',
-                to: '#',
-                target: '_blank',
-                roles: ['student', 'admin']
-            },
-            {
-                id: 'help',
-                label: 'Ayuda',
-                icon: 'i-lucide-info',
-                to: '/dashboard/help',
-                roles: ['student', 'admin']
-            }
-        ]
-
-        return baseItems
-    })
-
-    // Filtrar items según rol y acceso
-    // Filtrar items según rol y acceso
-    const filteredMenuItems = computed<MenuItem[]>(() => {
+    // Filtrado recursivo
+    const filterMenuItem = (item: MenuItem): MenuItem | null => {
         if (!isLogged.value) {
-            return allMenuItems.value.filter(item =>
-                item.roles?.includes('visitor')
-            )
+            if (item.roles && !item.roles.includes('visitor')) return null
+        } else {
+            const userRole = user.value?.role as 'admin' | 'student'
+            if (item.roles && !item.roles.includes(userRole)) return null
         }
 
-        const userRole = user.value?.role as 'admin' | 'student'
+        if (item.requiresLabAccess && !lab.hasAccess) return null
 
-        const filtered = allMenuItems.value.filter(item => {
-            // Verificar rol
-            if (item.roles && !item.roles.includes(userRole)) {
-                return false
-            }
+        if (item.children && item.children.length) {
+            const filteredChildren = item.children
+                .map(child => filterMenuItem(child))
+                .filter((c): c is MenuItem => c !== null)
+            if (filteredChildren.length === 0) return null
+            return { ...item, children: filteredChildren }
+        }
+        return { ...item }
+    }
 
-            // ✅ Verificar acceso a laboratorio correctamente
-            if (item.requiresLabAccess && !lab.hasAccess) {
-                console.log(`🔍 Menu item ${item.id} filtered out - requiresLabAccess: ${item.requiresLabAccess}, hasAccess: ${lab.hasAccess}`)
-                return false
-            }
+    // Menú principal filtrado
+    const mainMenuItems = computed<MenuItem[]>(() => {
+        const filtered = MAIN_MENU_STRUCTURE
+            .map(item => filterMenuItem(item))
+            .filter((item): item is MenuItem => item !== null)
 
-            return true
-        })
+        // Añadir onSelect para cerrar sidebar
+        const addOnSelect = (items: MenuItem[]): MenuItem[] =>
+            items.map(item => ({
+                ...item,
+                onSelect: () => closeMenu(),
+                children: item.children ? addOnSelect(item.children) : undefined
+            }))
 
-        console.log('🔍 Filtered menu items:', filtered.map(i => ({ id: i.id, label: i.label })))
-        return filtered
-    })
-    // Separar en menú principal y footer
-    const menuStructure = computed(() => {
-        const mainItems: MenuItem[] = []
-        const footerItems: MenuItem[] = []
-
-        // Items que van al footer
-        const footerIds = ['feedback', 'help', 'docs']
-
-        filteredMenuItems.value.forEach(item => {
-            if (footerIds.includes(item.id || '')) {
-                footerItems.push(item)
-            } else {
-                mainItems.push(item)
-            }
-        })
-
-        return { mainItems, footerItems }
+        return addOnSelect(filtered)
     })
 
-    // Agrupar por categorías para el buscador
+    // Footer filtrado
+    const footerMenuItems = computed<MenuItem[]>(() => {
+        let filtered = FOOTER_ITEMS
+        if (!isLogged.value) {
+            filtered = filtered.filter(item => item.roles?.includes('visitor'))
+        } else {
+            const userRole = user.value?.role as 'admin' | 'student'
+            filtered = filtered.filter(item => !item.roles || item.roles.includes(userRole))
+        }
+        return filtered.map(item => ({ ...item, onSelect: () => closeMenu() }))
+    })
+
+    // Buscador (main + footer)
     const searchGroups = computed(() => {
         const groups = []
 
-        // Grupo de navegación principal
-        if (menuStructure.value.mainItems.length > 0) {
+        const flattenGroup = (parentLabel: string, items: MenuItem[]): any[] => {
+            const result: any[] = []
+            for (const item of items) {
+                if (item.children) {
+                    result.push(...flattenGroup(item.label, item.children))
+                } else {
+                    result.push({
+                        id: item.id,
+                        label: item.label,
+                        icon: item.icon,
+                        to: item.to,
+                        group: parentLabel,
+                        onSelect: () => closeMenu()
+                    })
+                }
+            }
+            return result
+        }
+
+        // Agrupar por el primer nivel (índice)
+        for (const item of mainMenuItems.value) {
+            const groupName = item.children ? item.label : 'General'
+            const flat = item.children ? flattenGroup(item.label, item.children) : [{
+                id: item.id,
+                label: item.label,
+                icon: item.icon,
+                to: item.to,
+                group: groupName,
+                onSelect: () => closeMenu()
+            }]
+            groups.push({ id: item.id, label: groupName, items: flat })
+        }
+
+        // Footer como grupo aparte
+        if (footerMenuItems.value.length) {
             groups.push({
-                id: 'main-nav',
-                label: 'Navegación Principal',
-                items: menuStructure.value.mainItems.map(item => ({
+                id: 'footer',
+                label: 'Recursos',
+                items: footerMenuItems.value.map(item => ({
                     id: item.id,
                     label: item.label,
                     icon: item.icon,
                     to: item.to,
-                    onSelect: item.onSelect
+                    target: item.target,
+                    onSelect: () => closeMenu()
                 }))
             })
         }
 
-        // Grupo de recursos
-        if (menuStructure.value.footerItems.length > 0) {
-            groups.push({
-                id: 'resources',
-                label: 'Recursos y Ayuda',
-                items: menuStructure.value.footerItems.map(item => ({
-                    id: item.id,
-                    label: item.label,
-                    icon: item.icon,
-                    to: item.to,
-                    target: item.target
-                }))
-            })
-        }
-
-        // Grupo de usuario (si está logueado)
+        // Cuenta de usuario
         if (isLogged.value) {
             groups.push({
                 id: 'account',
@@ -269,7 +224,8 @@ export const useMenu = () => {
                         id: 'profile',
                         label: 'Mi Perfil',
                         icon: 'i-lucide-user',
-                        to: user.value?.role === 'admin' ? '/dashboard/profile' : '/dashboard/student/profile'
+                        to: user.value?.role === 'admin' ? '/dashboard/profile' : '/dashboard/student/profile',
+                        onSelect: () => closeMenu()
                     },
                     {
                         id: 'logout',
@@ -278,6 +234,7 @@ export const useMenu = () => {
                         onSelect: () => {
                             const { logout } = useAuth()
                             logout()
+                            closeMenu()
                         }
                     }
                 ]
@@ -287,41 +244,33 @@ export const useMenu = () => {
         return groups
     })
 
-    // Método para cerrar menú
-    const closeMenu = () => {
-        const sidebarOpen = useState('sidebar-open')
-        sidebarOpen.value = false
-    }
+    const closeMenu = () => { sidebarOpen.value = false }
 
-    // Método para actualizar badges
+    // Helper para badges (opcional)
     const updateBadge = (itemId: string, badge: string | number) => {
-        const item = allMenuItems.value.find(i => i.id === itemId)
-        if (item) {
-            item.badge = String(badge)
+        const findAndSet = (items: MenuItem[]): boolean => {
+            for (const item of items) {
+                if (item.id === itemId) { item.badge = String(badge); return true }
+                if (item.children && findAndSet(item.children)) return true
+            }
+            return false
         }
+        findAndSet(MAIN_MENU_STRUCTURE)
+        findAndSet(FOOTER_ITEMS)
     }
 
-    // Computed helpers
     const isStudent = computed(() => user.value?.role === 'student')
     const isAdmin = computed(() => user.value?.role === 'admin')
     const hasLabAccess = computed(() => lab.hasAccess)
 
     return {
-        // Menús estructurados
-        mainMenuItems: computed(() => menuStructure.value.mainItems),
-        footerMenuItems: computed(() => menuStructure.value.footerItems),
+        mainMenuItems,
+        footerMenuItems,
         searchGroups,
-
-        // Helpers
         isStudent,
         isAdmin,
         hasLabAccess,
-
-        // Métodos útiles
         updateBadge,
-        closeMenu,
-
-        // Items crudos (si se necesitan)
-        allItems: filteredMenuItems
+        closeMenu
     }
 }
