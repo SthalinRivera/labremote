@@ -10,8 +10,8 @@ export interface MenuItem extends NavigationMenuItem {
 // 1. Ítems del FOOTER (abajo del sidebar)
 // ----------------------------------------------
 const FOOTER_ITEMS: MenuItem[] = [
-    { id: 'feedback', label: 'Feedback', icon: 'i-lucide-message-circle', to: '#', target: '_blank', roles: ['student', 'admin'] },
-    { id: 'help', label: 'Ayuda', icon: 'i-lucide-info', to: '/dashboard/help', roles: ['student', 'admin'] },
+    { id: 'feedback', label: 'Feedback y soporte', icon: 'i-lucide-life-buoy', to: '/dashboard/feedback-support', roles: ['visitor', 'student', 'admin'] },
+    { id: 'faq', label: 'Preguntas Frecuentes', icon: 'i-lucide-help-circle', to: '/dashboard/faq', roles: ['visitor', 'student', 'admin'] },
     { id: 'docs', label: 'Documentación', icon: 'i-lucide-book-open', to: '/docs', roles: ['visitor', 'student', 'admin'] }
 ]
 
@@ -47,19 +47,30 @@ const MAIN_MENU_STRUCTURE: MenuItem[] = [
         label: 'Cola',
         icon: 'i-lucide-clipboard-clock',
         to: '/dashboard/student/queue',
-        roles: ['student', 'admin']
+        roles: ['student']
     },
 
     // === Grupo LABORATORIO (colapsable, requiere acceso) ===
     {
         id: 'laboratory',
         label: 'Laboratorio',
-        roles: ['student', 'admin'],
+        roles: ['student'],
         icon: 'i-lucide-flask-conical',
         requiresLabAccess: true,
         children: [
             { id: 'lab-jetson', label: 'Jetson Nano', to: '/dashboard/laboratory/ios-jetson-nano', icon: 'i-lucide-laptop', roles: ['student', 'admin'] },
             { id: 'lab-camera', label: 'Cámara', to: '/dashboard/laboratory/camera', icon: 'i-lucide-video', roles: ['student', 'admin'] },
+        ]
+    },
+    {
+        id: 'laboratory',
+        label: 'Laboratorio',
+        roles: ['admin'],
+        icon: 'i-lucide-flask-conical',
+
+        children: [
+            { id: 'lab-jetson', label: 'Jetson Nano', to: '/dashboard/laboratory/ios-jetson-nano', icon: 'i-lucide-laptop', roles: ['admin'] },
+            { id: 'lab-camera', label: 'Cámara', to: '/dashboard/laboratory/camera', icon: 'i-lucide-video', roles: ['admin'] },
         ]
     },
     {
@@ -89,14 +100,20 @@ const MAIN_MENU_STRUCTURE: MenuItem[] = [
         ]
     },
 
-    // === Ítems directos para admin ===
+    // === Grupo MÉTRICAS (solo admin, colapsable) ===
     {
         id: 'reports',
         label: 'Reportes',
         icon: 'i-lucide-file-text',
-        to: '/dashboard/reports',
-        roles: ['admin']
+        roles: ['admin'],
+        children: [
+            { id: 'admin-reports-general', label: 'General', to: '/dashboard/reports', icon: 'i-lucide-chart-bar' },
+            { id: 'admin-reports-sessions', label: 'Sesiones', to: '/dashboard/session', icon: 'i-lucide-timer' },
+        ]
     },
+
+
+
     {
         id: 'configuration',
         label: 'Configuración',

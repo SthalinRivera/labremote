@@ -34,13 +34,6 @@ const { data: response, refresh: refreshConfig } = useAsyncData(
 
 const config = computed(() => response.value?.data || null)
 
-// Truncar URL para mostrar solo parte de ella
-function truncateUrl(url: string | null, maxLength: number = 30): string {
-  if (!url) return 'No configurada'
-  if (url.length <= maxLength) return url
-  return url.substring(0, maxLength) + '...'
-}
-
 // Actualizar configuración
 async function updateQuickConfig(field: 'name' | 'session_duration_seconds' | 'vm_url' | 'webcam_url', value: any) {
   if (!config.value) return
@@ -53,7 +46,7 @@ async function updateQuickConfig(field: 'name' | 'session_duration_seconds' | 'v
     
     toast.add({
       title: 'Configuración actualizada',
-      description: `${field === 'vm_url' ? 'URL de VM' : field === 'webcam_url' ? 'URL de Cámara' : field} actualizado correctamente`,
+      description: getFieldDescription(field),
       color: 'success'
     })
     
@@ -65,6 +58,17 @@ async function updateQuickConfig(field: 'name' | 'session_duration_seconds' | 'v
       color: 'error'
     })
   }
+}
+
+// Texto descriptivo para el toast
+function getFieldDescription(field: string): string {
+  const descriptions: Record<string, string> = {
+    name: 'Nombre del laboratorio actualizado',
+    vm_url: 'URL de VM actualizada',
+    webcam_url: 'URL de cámara actualizada',
+    session_duration_seconds: 'Duración de sesión actualizada'
+  }
+  return descriptions[field] || 'Campo actualizado correctamente'
 }
 
 // Iniciar edición
@@ -111,7 +115,7 @@ function cancelEditing() {
   editValue.value = ''
 }
 
-// Manejar tecla Enter
+// Manejar tecla Enter/Escape
 function handleKeydown(e: KeyboardEvent, field: 'name' | 'vm_url' | 'webcam_url') {
   if (e.key === 'Enter') {
     e.preventDefault()
@@ -121,7 +125,7 @@ function handleKeydown(e: KeyboardEvent, field: 'name' | 'vm_url' | 'webcam_url'
   }
 }
 
-// Función para ajustar duración
+// Ajustar duración en minutos
 function adjustDuration(delta: number) {
   if (!config.value) return
   const newDuration = Math.min(3600, Math.max(60, config.value.session_duration_seconds + delta))
@@ -134,15 +138,19 @@ function formatDate(date: string) {
   return new Date(date).toLocaleString('es-ES')
 }
 
-// Formatear tiempo
+// Formatear duración legible
 function formatDuration(seconds: number): string {
   const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
-  const secs = seconds % 60
   
   if (hours > 0) return `${hours}h ${minutes}m`
   if (minutes > 0) return `${minutes} minutos`
-  return `${secs} segundos`
+  return `${seconds} segundos`
+}
+
+// Abrir URL en nueva pestaña
+function openUrl(url: string | null) {
+  if (url) window.open(url, '_blank')
 }
 </script>
 
@@ -169,15 +177,14 @@ function formatDuration(seconds: number): string {
 
     <template #body>
       <div class="h-full flex flex-col">
-        <!-- Grid de 2 columnas para ocupar todo el body -->
         <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
           
-          <!-- Columna Izquierda: Configuración General -->
+          <!-- Columna Izquierda: Estado y Configuración General -->
           <div class="space-y-6">
             <!-- Widget de Estado -->
             <LabStatusWidget />
 
-            <!-- Configuración Detallada -->
+            <!-- Configuración General -->
             <UCard>
               <template #header>
                 <div class="flex items-center justify-between">
@@ -205,7 +212,7 @@ function formatDuration(seconds: number): string {
                           v-model="editValue"
                           class="flex-1"
                           size="md"
-                          placeholder="Nombre del laboratorio"
+                          placeholder="Ej: Laboratorio A"
                           autofocus
                           @keydown.enter="saveEdit('name')"
                           @keydown.escape="cancelEditing"
@@ -216,13 +223,15 @@ function formatDuration(seconds: number): string {
                       <div v-else class="flex items-center gap-2 p-2 bg-default rounded-lg">
                         <UIcon name="i-lucide-microchip" class="text-muted" />
                         <span class="font-mono font-medium">{{ config.name }}</span>
-                        <UButton 
-                          size="xs" 
-                          variant="ghost" 
-                          icon="i-lucide-pencil"
-                          class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
-                          @click="startEditing('name', config.name)"
-                        />
+                        <UTooltip text="Editar nombre">
+                          <UButton 
+                            size="xs" 
+                            variant="ghost" 
+                            icon="i-lucide-pencil"
+                            class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
+                            @click="startEditing('name', config.name)"
+                          />
+                        </UTooltip>
                       </div>
                     </div>
                   </div>
@@ -243,20 +252,24 @@ function formatDuration(seconds: number): string {
                       </div>
                     </div>
                     <div class="flex gap-1">
-                      <UButton 
-                        size="sm" 
-                        variant="outline"
-                        icon="i-lucide-minus"
-                        @click="adjustDuration(-60)"
-                        :disabled="config.session_duration_seconds <= 60"
-                      />
-                      <UButton 
-                        size="sm" 
-                        variant="outline"
-                        icon="i-lucide-plus"
-                        @click="adjustDuration(60)"
-                        :disabled="config.session_duration_seconds >= 3600"
-                      />
+                      <UTooltip text="Reducir 1 minuto">
+                        <UButton 
+                          size="sm" 
+                          variant="outline"
+                          icon="i-lucide-minus"
+                          @click="adjustDuration(-60)"
+                          :disabled="config.session_duration_seconds <= 60"
+                        />
+                      </UTooltip>
+                      <UTooltip text="Aumentar 1 minuto">
+                        <UButton 
+                          size="sm" 
+                          variant="outline"
+                          icon="i-lucide-plus"
+                          @click="adjustDuration(60)"
+                          :disabled="config.session_duration_seconds >= 3600"
+                        />
+                      </UTooltip>
                     </div>
                   </div>
                 </div>
@@ -276,13 +289,11 @@ function formatDuration(seconds: number): string {
                 </div>
               </div>
 
-              <!-- Loading state -->
+              <!-- Loading / Error states -->
               <div v-else-if="response?.pending" class="text-center text-muted py-12">
                 <UIcon name="i-lucide-loader-circle" class="animate-spin text-3xl mb-3" />
                 <div>Cargando configuración...</div>
               </div>
-
-              <!-- Error state -->
               <div v-else-if="response?.error" class="text-center text-error py-12">
                 <UIcon name="i-lucide-alert-circle" class="text-3xl mb-3" />
                 <div class="mb-3">Error al cargar la configuración</div>
@@ -291,19 +302,23 @@ function formatDuration(seconds: number): string {
             </UCard>
           </div>
 
-          <!-- Columna Derecha: URLs y Previews -->
-          <div class="space-y-6">
-            <!-- URL de VM -->
+          <!-- Columna Derecha: Recursos (VM + Webcam) -->
+          <div>
             <UCard>
               <template #header>
                 <div class="flex items-center gap-2">
-                  <UIcon name="i-lucide-monitor" class="text-xl" />
-                  <h3 class="text-lg font-semibold">Máquina Virtual</h3>
+                  <UIcon name="i-lucide-link-2" class="text-xl" />
+                  <h3 class="text-lg font-semibold">Recursos del Laboratorio</h3>
                 </div>
               </template>
 
-              <div v-if="config" class="space-y-4">
+              <div v-if="config" class="space-y-5">
+                <!-- Máquina Virtual -->
                 <div class="group">
+                  <label class="text-xs font-semibold text-muted uppercase tracking-wider mb-2 block flex items-center gap-1">
+                    <UIcon name="i-lucide-monitor" />
+                    Máquina Virtual
+                  </label>
                   <div class="flex items-center gap-2">
                     <div class="flex-1">
                       <div v-if="editingField === 'vm_url'" class="space-y-2">
@@ -311,7 +326,7 @@ function formatDuration(seconds: number): string {
                           v-model="editValue"
                           size="md"
                           placeholder="https://ejemplo.com/vm"
-                          
+                          autofocus
                           @keydown.enter="saveEdit('vm_url')"
                           @keydown.escape="cancelEditing"
                         />
@@ -327,51 +342,40 @@ function formatDuration(seconds: number): string {
                       <div v-else class="flex items-center gap-2 p-2 bg-default rounded-lg">
                         <UIcon name="i-lucide-link" class="text-muted flex-shrink-0" />
                         <div class="flex-1 min-w-0">
-                          <div class="text-xs text-muted">URL</div>
                           <div class="font-mono text-sm truncate" :title="config.vm_url || ''">
-                            {{ truncateUrl(config.vm_url, 40) }}
+                            {{ config.vm_url || 'No configurada' }}
                           </div>
                         </div>
-                        <UButton 
-                          size="xs" 
-                          variant="ghost" 
-                          icon="i-lucide-pencil"
-                          class="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
-                          @click="startEditing('vm_url', config.vm_url)"
-                        />
+                        <div class="flex items-center gap-1">
+                          <UTooltip v-if="config.vm_url" text="Abrir enlace">
+                            <UButton
+                              size="xs"
+                              variant="ghost"
+                              icon="i-lucide-external-link"
+                              @click="openUrl(config.vm_url)"
+                            />
+                          </UTooltip>
+                          <UTooltip text="Editar URL">
+                            <UButton
+                              size="xs"
+                              variant="ghost"
+                              icon="i-lucide-pencil"
+                              class="opacity-0 group-hover:opacity-100 transition-opacity"
+                              @click="startEditing('vm_url', config.vm_url)"
+                            />
+                          </UTooltip>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Preview VM -->
-                <div v-if="config.vm_url" class="mt-4">
-                  <div class="text-sm font-medium mb-2 flex items-center gap-2">
-                    <UIcon name="i-lucide-eye" />
-                    Vista previa
-                  </div>
-                  <div class="bg-black rounded-lg overflow-hidden">
-                    <iframe 
-                      :src="config.vm_url" 
-                      class="w-full h-64"
-                      sandbox="allow-same-origin allow-scripts"
-                    />
-                  </div>
-                </div>
-              </div>
-            </UCard>
-
-            <!-- URL de Cámara Web -->
-            <UCard>
-              <template #header>
-                <div class="flex items-center gap-2">
-                  <UIcon name="i-lucide-video" class="text-xl" />
-                  <h3 class="text-lg font-semibold">Cámara Web</h3>
-                </div>
-              </template>
-
-              <div v-if="config" class="space-y-4">
+                <!-- Cámara Web -->
                 <div class="group">
+                  <label class="text-xs font-semibold text-muted uppercase tracking-wider mb-2 block flex items-center gap-1">
+                    <UIcon name="i-lucide-video" />
+                    Cámara Web
+                  </label>
                   <div class="flex items-center gap-2">
                     <div class="flex-1">
                       <div v-if="editingField === 'webcam_url'" class="space-y-2">
@@ -395,37 +399,37 @@ function formatDuration(seconds: number): string {
                       <div v-else class="flex items-center gap-2 p-2 bg-default rounded-lg">
                         <UIcon name="i-lucide-link" class="text-muted flex-shrink-0" />
                         <div class="flex-1 min-w-0">
-                          <div class="text-xs text-muted">URL</div>
                           <div class="font-mono text-sm truncate" :title="config.webcam_url || ''">
-                            {{ truncateUrl(config.webcam_url, 40) }}
+                            {{ config.webcam_url || 'No configurada' }}
                           </div>
                         </div>
-                        <UButton 
-                          size="xs" 
-                          variant="ghost" 
-                          icon="i-lucide-pencil"
-                          class="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
-                          @click="startEditing('webcam_url', config.webcam_url)"
-                        />
+                        <div class="flex items-center gap-1">
+                          <UTooltip v-if="config.webcam_url" text="Abrir enlace">
+                            <UButton
+                              size="xs"
+                              variant="ghost"
+                              icon="i-lucide-external-link"
+                              @click="openUrl(config.webcam_url)"
+                            />
+                          </UTooltip>
+                          <UTooltip text="Editar URL">
+                            <UButton
+                              size="xs"
+                              variant="ghost"
+                              icon="i-lucide-pencil"
+                              class="opacity-0 group-hover:opacity-100 transition-opacity"
+                              @click="startEditing('webcam_url', config.webcam_url)"
+                            />
+                          </UTooltip>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Preview Webcam -->
-                <div v-if="config.webcam_url" class="mt-4">
-                  <div class="text-sm font-medium mb-2 flex items-center gap-2">
-                    <UIcon name="i-lucide-eye" />
-                    Vista previa
-                  </div>
-                  <div class="bg-black rounded-lg overflow-hidden">
-                    <img 
-                      :src="config.webcam_url" 
-                      alt="Webcam preview"
-                      class="w-full h-64 object-cover"
-                      @error="($event.target as HTMLImageElement).style.display = 'none'"
-                    />
-                  </div>
+                <div class="text-xs text-muted pt-2 border-t border-default">
+                  <UIcon name="i-lucide-info" class="inline mr-1" />
+                  Las URLs deben comenzar con http:// o https://
                 </div>
               </div>
             </UCard>

@@ -5,7 +5,7 @@ import type { Mail } from '~/types'
 definePageMeta({
     layout: 'dashboard', // Layout sin header ni sidebar
     middleware: ['auth', 'role'],
-    roles: ['student']
+    roles: ['visitor', 'student', 'admin']
 })
 const tabItems = [{
   label: 'All',
@@ -53,7 +53,7 @@ const isMobile = breakpoints.smaller('lg')
 
 <template>
    <UDashboardPanel id="dashboard">
-         <UDashboardNavbar title="Dashboard - Ayuda" :ui="{ right: 'gap-3' }">
+         <UDashboardNavbar title="Dashboard - Preguntas Frecuentes" :ui="{ right: 'gap-3' }">
             
         <template #leading>
           <UDashboardSidebarCollapse />
@@ -67,8 +67,9 @@ const isMobile = breakpoints.smaller('lg')
       </UDashboardNavbar>
   
  
-
+<div class="mx-4">
   <LabFAQ />
+</div>
 
  </UDashboardPanel>
 </template>

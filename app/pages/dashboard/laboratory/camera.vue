@@ -361,7 +361,7 @@ onUnmounted(() => {
         </template>
         
         <template #body>
-            <LabSessionGuard>
+         
                 <div class="p-2 min-h-full">
                     <!-- Header con info de sesión -->
                     <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
@@ -527,7 +527,7 @@ onUnmounted(() => {
                         <p class="text-sm text-gray-500">Cargando configuración de la cámara...</p>
                     </div>
                 </div>
-            </LabSessionGuard>
+       
         </template>
     </UDashboardPanel>
 </template>

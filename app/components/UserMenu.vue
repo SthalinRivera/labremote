@@ -150,9 +150,13 @@ const items = computed<DropdownMenuItem[][]>(() => {
     to: '/docs',
     target: '_blank'
   }, {
-    label: 'Soporte',
+    label: 'Preguntas Frecuentes',
     icon: 'i-lucide-help-circle',
-    to: '/support'
+    to: '/dashboard/faq'
+  }, {
+    label: 'Ayuda y Soporte',
+    icon: 'i-lucide-life-buoy',
+    to: '/dashboard/feedback-support'
   }])
   
   // Sección 5: Cerrar sesión
