@@ -21,7 +21,7 @@ export const useLabSessionGuard = () => {
                 description: 'Tu tiempo de laboratorio ha terminado',
                 color: 'warning'
             })
-            router.push('/dashboard/session-status')
+            router.push('/dashboard/laboratory/session-status')
         }
     }
 

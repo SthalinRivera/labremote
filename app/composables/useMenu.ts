@@ -34,6 +34,13 @@ const MAIN_MENU_STRUCTURE: MenuItem[] = [
         to: '/dashboard',
         roles: ['admin']  // solo admin
     },
+    {
+        id: 'usuarios',
+        label: 'Usuarios',
+        icon: 'i-lucide-users',
+        to: '/dashboard/users',
+        roles: ['admin']  // solo admin
+    },
     // Para estudiantes: perfil y cola como directos
     {
         id: 'student-profile',

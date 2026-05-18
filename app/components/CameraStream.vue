@@ -105,7 +105,7 @@ const timeLeftFormatted = computed(() => {
             </div>
         </template>
 
-        <div class="relative bg-black" style="height: 70vh;">
+        <div class="relative bg-black" style="height: 100vh;">
             <!-- Loader -->
             <div v-if="camLoading" class="absolute inset-0 flex items-center justify-center bg-black/90 z-20">
                 <div class="text-center">

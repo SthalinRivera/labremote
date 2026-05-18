@@ -13,9 +13,9 @@ const pinCategories = [
     icon: "i-heroicons-light-bulb",
     color: "green",
     pins: [
-      { pin: "D2", name: "LED Verde", type: "output" },
-      { pin: "D3", name: "LED Amarillo", type: "output" },
-      { pin: "D4", name: "LED Rojo", type: "output" }
+      { pin: "Pin 13", name: "LED Rojo", type: "output" },
+      { pin: "Pin 12", name: "LED Amarillo", type: "output" },
+      { pin: "Pin 11", name: "LED Verde", type: "output" }
     ]
   },
   {
@@ -23,7 +23,7 @@ const pinCategories = [
     icon: "i-heroicons-cog-6-tooth",
     color: "orange",
     pins: [
-      { pin: "D5", name: "Servo Signal", type: "pwm" }
+      { pin: "Pin 9", name: "Servo Signal", type: "pwm" }
     ]
   },
   {
@@ -31,9 +31,9 @@ const pinCategories = [
     icon: "i-heroicons-computer-chip",
     color: "blue",
     pins: [
-      { pin: "D11", name: "DIN (Data In)", type: "spi" },
-      { pin: "D10", name: "CS (Chip Select)", type: "spi" },
-      { pin: "D13", name: "CLK (Clock)", type: "spi" }
+      { pin: "Pin 5", name: "DIN (Data In)", type: "spi" },
+      { pin: "Pin 4", name: "CS (Chip Select)", type: "spi" },
+      { pin: "Pin 3", name: "CLK (Clock)", type: "spi" }
     ]
   },
   {
@@ -41,8 +41,8 @@ const pinCategories = [
     icon: "i-heroicons-radio",
     color: "purple",
     pins: [
-      { pin: "D6", name: "TRIG", type: "trigger" },
-      { pin: "D7", name: "ECHO", type: "echo" }
+      { pin: "Pin 7", name: "TRIG", type: "trigger" },
+      { pin: "Pin 6", name: "ECHO", type: "echo" }
     ]
   },
   {
@@ -50,7 +50,7 @@ const pinCategories = [
     icon: "i-heroicons-bolt",
     color: "red",
     pins: [
-      { pin: "D9", name: "Motor Control", type: "pwm" }
+      { pin: "Pin 8", name: "Motor Control", type: "pwm" }
     ]
   },
   {
@@ -209,11 +209,12 @@ const getPinTypeColor = (type: string) => {
             </template>
 
             <div class="flex justify-center items-center">
-              <img 
+               <img 
                 src="/images/esquema-arduino.png" 
                 alt="Esquema IoT - Arquitectura Arduino"
                 class="w-full max-w-5xl rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
-              />
+              /> 
+             
             </div>
 
             <template #footer>
@@ -239,5 +240,12 @@ const getPinTypeColor = (type: string) => {
 /* Transiciones suaves para los cards */
 :deep(.card-hover) {
   transition: all 0.2s ease-in-out;
+}
+.wokwi-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 </style>
